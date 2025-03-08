@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using CrudAppData;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace EmployeeTracker
 {
@@ -7,6 +10,12 @@ namespace EmployeeTracker
         public static MauiApp CreateMauiApp()
         {
             var builder = MauiApp.CreateBuilder();
+
+            builder.Services.AddDbContext<AppDbContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+            });
+
             builder
                 .UseMauiApp<App>()
                 .ConfigureFonts(fonts =>
