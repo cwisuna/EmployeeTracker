@@ -11,10 +11,16 @@ namespace EmployeeTracker
         {
             var builder = MauiApp.CreateBuilder();
 
+            builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+
+
             builder.Services.AddDbContext<AppDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            builder.Services.AddScoped<EmployeeService>();
+            builder.Services.AddScoped<DepartmentService>();
 
             builder
                 .UseMauiApp<App>()

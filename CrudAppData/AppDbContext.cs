@@ -8,8 +8,8 @@ namespace CrudAppData
         {
         }
 
-        public DbSet<Department> Departments { get; set; }
-        public DbSet<Employee> Employees { get; set; }
+        public DbSet<CrudAppData.Department> Departments { get; set; }
+        public DbSet<CrudAppData.Employee> Employees { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -17,7 +17,7 @@ namespace CrudAppData
                 .HasOne(e => e.Department)
                 .WithMany(d => d.Employees)
                 .HasForeignKey(e => e.DepartmentId);
-            
+
             base.OnModelCreating(modelBuilder);
         }
     }

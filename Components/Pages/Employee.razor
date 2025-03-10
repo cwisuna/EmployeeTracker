@@ -1,0 +1,85 @@
+﻿@page "/employee"
+@inject EmployeeService EmployeeService
+@inject DepartmentService DepartmentService
+@using CrudAppData
+
+<h3>Add Employee</h3>
+
+<EditForm Model="@employee" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <label for="Name">Name</label>
+        <InputText id="Name" class="form-control" @bind-Value="employee.Name" />
+    </div>
+
+    <div>
+        <label for="JobTitle">Job Title</label>
+        <InputText id="JobTitle" class="form-control" @bind-Value="employee.JobTitle" />
+    </div>
+
+    <div>
+        <label for="DepartmentId">Department</label>
+        <select id="DepartmentId" class="form-control" @bind="employee.DepartmentId">
+            <option value="">Select a Department</option>
+            @foreach (var department in departments)
+            {
+                <option value="@department.Id">@department.DepartmentName</option>
+            }
+        </select>
+    </div>
+
+    <div>
+        <button type="submit" class="btn btn-primary">Add Employee</button>
+    </div>
+</EditForm>
+
+@if (isSuccess)
+{
+    <div class="alert alert-success">
+        Employee added successfully!
+    </div>
+}
+
+@if (isError)
+{
+    <div class="alert alert-danger">
+        Something went wrong. Please try again.
+    </div>
+}
+
+@code {
+    private CrudAppData.Employee employee = new CrudAppData.Employee(); 
+    private List<Department> departments = new List<Department>();
+    private bool isSuccess = false;
+    private bool isError = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            departments = await DepartmentService.GetDepartmentsAsync();
+        }
+        catch (Exception ex)
+        {
+            isError = true;
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        try
+        {
+            await EmployeeService.AddEmployeeAsync(employee);
+            isSuccess = true;
+            isError = false;
+            employee = new CrudAppData.Employee();
+        }
+        catch (Exception)
+        {
+            isError = true;
+            isSuccess = false;
+        }
+    }
+}
